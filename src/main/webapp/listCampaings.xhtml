@@ -6,52 +6,58 @@
         <f:view contracts="#{view.locale.language}">
             <ui:composition template="/template.xhtml">
                 <ui:define name="content">
-                    <h1>Meine Aktionen</h1>
-                   
+                    <h1>#{msg['listCampaigns.my_campaigns']}</h1>
                     <h:form>
-                        <h:dataTable value="#{campaignListProducer.campaigns}" var="campaign">
+                        <h:dataTable value="#{campaignListProducer.campaigns}"
+                                     var="campaign">
                             <h:column>
-                                 <f:facet name="header">Löschen</f:facet>
-                                <h:commandLink value="entfernen"
+                                <h:commandLink value="x"
                                                actionListener=
                                                "#{listCampaignsController
                                                   .doDeleteCampaign(campaign)}" />
                             </h:column>
                             <h:column>
-                                <f:facet name="header">Name</f:facet>
+                                <f:facet name="header">
+                                    #{msg['listCampaigns.name']}
+                                </f:facet>
                                 <h:outputText value="#{campaign.name}" />
                             </h:column>
                             <h:column>
-                                <f:facet name="header">Spendenziel</f:facet>
+                                <f:facet name="header">
+                                    #{msg['listCampaigns.target_amount']}
+                                </f:facet>
                                 <h:outputText value="#{campaign.targetAmount}">
                                     <f:convertNumber type="currency"
                                                      currencyCode="EUR" />
                                 </h:outputText>
                             </h:column>
                             <h:column>
-                                <f:facet name="header">Bisher gespendet</f:facet>
+                                <f:facet name="header">
+                                    #{msg['listCampaigns.donated_so_far']}
+                                </f:facet>
                                 <h:outputText value="#{campaign.amountDonatedSoFar}">
                                     <f:convertNumber type="currency"
                                                      currencyCode="EUR" />
                                 </h:outputText>
                             </h:column>
                             <h:column>
-                                <h:commandLink value="Editieren"
+                                <h:commandLink value="#{msg['listCampaigns.edit']}"
                                                action="#{listCampaignsController
                                                          .doEditCampaign(campaign)}" />
-                            </h:column>
-                            <h:column>
-                                <h:commandLink value="Spendenliste"
+                            </h:column><h:column>
+                                <h:commandLink value=
+                                               "#{msg['listCampaigns.list_donations']}"
                                                action="#{listCampaignsController
                                                          .doListDonations(campaign)}" />
                             </h:column>
                             <h:column>
-                                <h:commandLink value="Formular"
+                                <h:commandLink value="#{msg['listCampaigns.form']}"
                                                action="#{listCampaignsController
                                                          .doEditDonationForm(campaign)}" />
                             </h:column>
                         </h:dataTable>
-                        <h:commandButton value="Aktion hinzufügen"
+                        <h:commandButton value=
+                                         "#{msg['listCampaigns.add_campaign']}"
                                          action="#{listCampaignsController.doAddCampaign}" />
                     </h:form>
                 </ui:define>

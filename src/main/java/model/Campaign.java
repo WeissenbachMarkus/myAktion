@@ -14,13 +14,14 @@ import java.util.List;
  * @author weiss
  */
 public class Campaign {
-   private    String name;
+   private String name;
    private Double targetAmount,donationMinimum , amountDonatedSoFar;
    private Account account;
    private Long id;
    private List<Donation> donations;
 
     public Campaign() {
+        account=new Account();
     }
 
     public String getName() {
