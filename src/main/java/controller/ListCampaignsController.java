@@ -10,7 +10,10 @@ import model.Campaign;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.logging.Logger;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import util.Events.Deleted;
 
 /**
  *
@@ -22,6 +25,11 @@ public class ListCampaignsController implements Serializable {
 
     @Inject
     private CampaignProducer campaignProducer;
+    
+    @Inject @Deleted
+    private Event<Campaign> campaignDeleteEvent;
+    private Campaign campaingToDelete;
+    
 
     private static final long serialVersionUID = 8693277383648025822L;
 
@@ -46,7 +54,14 @@ public class ListCampaignsController implements Serializable {
     }
 
     public void doDeleteCampaign(Campaign campaign) {
-        System.out.println("Deletion not implemented, yet!");
+        this.campaingToDelete=campaign;
+        System.out.println("Läschen vermerkt");
     }
+    
+    public void commitDeleteCampaign()
+    {
+      this.campaignDeleteEvent.fire(this.campaingToDelete);
+    }
+   
 
 }

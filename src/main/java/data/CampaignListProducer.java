@@ -5,6 +5,7 @@
  */
 package data;
 
+import Services.CampaignService;
 import model.Account;
 import model.Campaign;
 import model.Donation;
@@ -14,64 +15,48 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import util.Events.Added;
+import util.Events.Deleted;
+import util.TestQualifier.MyService;
 
 /**
  *
  * @author markus
  */
 @SessionScoped
-@Named
 public class CampaignListProducer implements Serializable {
 
     private static final long serialVersionUID = -182866064791747156L;
     private List<Campaign> campaigns;
 
-    public CampaignListProducer() {
+    /* public CampaignListProducer() {
         campaigns = createMockCampaigns();
+    }*/
+    @Inject
+    @MyService
+    private CampaignService campaignService;
+
+    @PostConstruct
+    public void init() {
+        this.campaigns = campaignService.getAllCampaigns();
     }
 
+    @Named
+    @Produces
     public List<Campaign> getCampaigns() {
         return campaigns;
     }
 
-    public List<Campaign> createMockCampaigns() {
-        Donation donation1 = new Donation();
-        donation1.setDonorName("Heinz Schmidt");
-        donation1.setAmount(20d);
-        donation1.setReceiptRequested(true);
-        donation1.setStatus(Status.TRANSFERRED);
-        donation1.setAccount(new Account(donation1.getDonorName(),
-                "XXX Bank", "DE44876543210000123456"));
-        Donation donation2 = new Donation();
-        donation2.setDonorName("Karl Meier");
-        donation2.setAmount(30d);
-        donation2.setReceiptRequested(false);
-        donation2.setStatus(Status.IN_PROCESS);
-        donation2.setAccount(new Account(donation2.getDonorName(),
-                "YYY Bank", "DE44864275310000654321"));
-        List<Donation> spenden = new LinkedList<>();
-        spenden.add(donation1);
-        spenden.add(donation2);
-        Campaign campaign1 = new Campaign();
-        campaign1.setName("Trikots für A-Jugend");
-        campaign1.setTargetAmount(1000d);
-        campaign1.setAmountDonatedSoFar(258d);
-        campaign1.setDonationMinimum(20d);
-        campaign1.setId(1L);
-        campaign1.setAccount(new Account("Max Mustermann", "ABC Bank",
-                "DE44123456780100200300"));
-        campaign1.setDonations(spenden);
-        Campaign campaign2 = new Campaign();
-        campaign2.setName("Rollstuhl für Maria");
-        campaign2.setTargetAmount(2500d);
-        campaign2.setAmountDonatedSoFar(742d);
-        campaign2.setDonationMinimum(25d);
-        campaign2.setId(2L);
-        campaign2.setAccount(campaign1.getAccount());
-        campaign2.setDonations(spenden);
-        List<Campaign> ret = new LinkedList<>();
-        ret.add(campaign1);
-        ret.add(campaign2);
-        return ret;
+    public void onCampaignAdded(@Observes @Added Campaign campaign) {
+        this.getCampaigns().add(campaign);
     }
+
+    public void onCampaignDeleted(@Observes @Deleted Campaign campaign) {
+        this.getCampaigns().remove(campaign);
+    }
+
 }

@@ -9,6 +9,7 @@ import controller.Pages;
 import data.CampaignProducer;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import model.Campaign;
